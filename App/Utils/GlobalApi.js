@@ -80,9 +80,84 @@ const getBusinessListByCategory=async(category)=>{
   return result
   
 }
+
+const createBooking=async(data)=>{
+  const mutationQuery=gql`
+  mutation createBooking {
+    createBooking(
+      data: {
+        bookingStatus: Booked,
+        business: {
+          connect: {id: "`+data.businessid+`"}}, 
+        date: "`+data.date+`",
+        time: "`+data.time+`",
+       userEmail: "`+data.userEmail+`", 
+       userName: "`+data.userName+`"}
+    ) {
+      id
+    }
+    publishManyBookings(to: PUBLISHED) {
+      count
+    }
+  }`
+  const result= await request(MASTER_URL,mutationQuery);
+  return result
+  
+}
+
+const getUserBookings=async(userEmail)=>{
+  const query=gql`
+  query GetUserBookings {
+    bookings(orderBy: updatedAt_DESC, where: {userEmail: "`+userEmail+`"}) {
+      time
+      userEmail
+      userName
+      date
+      bookingStatus
+      id
+      business {
+        id
+        images {
+          url
+        }
+        name
+        address
+        contactPerson
+        email
+        about
+      }
+    }
+  }
+  `
+  const result= await request(MASTER_URL,query);
+  return result
+}
+const createUserFeedback=async(data)=>{
+  const mutationQuery=gql`
+  mutation Post {
+    createUserFeedBack(
+      data:{
+        email: "`+data.userEmail+`", 
+        name: "`+data.userName+`", 
+        feedback: "`+data.feedBack+`"
+      }) {
+      id
+    }
+    publishManyUserFeedBacks(to: PUBLISHED)
+  }
+  `
+  const result= await request(MASTER_URL,mutationQuery);
+  return result
+}
+
+
 export default{
     getSlider,
     getCategories,
     getBusinessList,
-    getBusinessListByCategory
+    getBusinessListByCategory,
+    createBooking,
+    getUserBookings,
+    createUserFeedback
+
 }

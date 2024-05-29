@@ -38,8 +38,6 @@ const styles =StyleSheet.create({
         padding:20,
         paddingTop:40,
         backgroundColor:Colors.PRIMARY,
-        borderBottomLeftRadius:25,
-        borderBottomRightRadius:25,
     },
     profileMainContainer:{
         display:'flex',
